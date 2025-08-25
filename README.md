@@ -1,6 +1,6 @@
 # Chat A2A
 
-A simple A2A Protocol compliant chat agent built with TypeScript and Cloudflare Workers + Durable Objects.
+A simple A2A Protocol compliant chat agent built with TypeScript and Cloudflare Workers.
 
 ## Features
 
@@ -13,9 +13,9 @@ This agent implements the [A2A Protocol](https://a2a-protocol.org/) and supports
 ## Implementation
 
 - **TypeScript**: Fully typed implementation using `@a2a-js/sdk`
-- **Cloudflare Workers**: Serverless runtime for the main handler
-- **Durable Objects**: State management for agent tasks and data
+- **Cloudflare Workers**: Serverless runtime for stateless request handling
 - **A2A Protocol Compliance**: JSON-RPC 2.0 endpoints and agent card discovery
+- **Lightweight**: No persistent state management needed for simple chat functionality
 
 ## Usage
 
@@ -102,23 +102,22 @@ npm run deploy
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   A2A Client    │───▶│ Cloudflare Worker │───▶│ Durable Object  │
-│                 │    │                  │    │  (Agent State)  │
-│ JSON-RPC 2.0    │◀───│  Main Handler    │◀───│                 │
-│ Requests        │    │                  │    │  Task Storage   │
+│   A2A Client    │───▶│ Cloudflare Worker │───▶│   A2A Handler   │
+│                 │    │                  │    │                 │
+│ JSON-RPC 2.0    │◀───│  Main Handler    │◀───│ Message Router  │
+│ Requests        │    │                  │    │ Task Manager    │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
 The main worker handles:
 - Agent card serving (`/.well-known/agent-card.json`)
 - CORS headers
-- Request routing to Durable Objects
+- JSON-RPC 2.0 message processing directly
 
-The Durable Object handles:
-- JSON-RPC 2.0 message processing
+The A2A Handler manages:
 - A2A Protocol message handling
 - Task and artifact creation
-- State persistence
+- Simple in-memory task storage for demonstration
 
 ## A2A Protocol Compliance
 

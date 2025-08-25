@@ -11,7 +11,12 @@
     "test:manual": "node dist/test.js",
     "test": "npm run build && npm run test:manual"
   },
-  "keywords": ["a2a", "agent", "chat", "cloudflare-workers"],
+  "keywords": [
+    "a2a",
+    "agent",
+    "chat",
+    "cloudflare-workers"
+  ],
   "author": "SoRA-X7",
   "license": "MIT",
   "dependencies": {

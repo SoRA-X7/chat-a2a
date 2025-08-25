@@ -4,12 +4,3 @@ compatibility_date = "2024-01-01"
 
 [env.production]
 name = "chat-a2a"
-
-[durable_objects]
-bindings = [
-  { name = "AGENT_STATE", class_name = "AgentState" }
-]
-
-[[migrations]]
-tag = "v1"
-new_classes = ["AgentState"]
