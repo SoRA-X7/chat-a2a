@@ -9,7 +9,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test:manual": "node dist/test.js",
-    "test": "npm run build && npm run test:manual"
+    "test": "pnpm run build && pnpm run test:manual"
   },
   "keywords": [
     "a2a",

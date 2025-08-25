@@ -86,16 +86,16 @@ GET /.well-known/agent-card.json
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Build the project
-npm run build
+pnpm run build
 
 # Run locally with Wrangler
-npm run dev
+pnpm run dev
 
 # Deploy to Cloudflare Workers
-npm run deploy
+pnpm run deploy
 ```
 
 ## Architecture
