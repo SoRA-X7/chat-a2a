@@ -1,16 +1,5 @@
 // Import A2A SDK types and interfaces
-import type {
-  AgentCard,
-  Message,
-  Task,
-  TaskStatusUpdateEvent,
-  TaskArtifactUpdateEvent,
-  MessageSendParams,
-  JSONRPCRequest,
-  JSONRPCResponse,
-  Part,
-  TextPart,
-} from "@a2a-js/sdk";
+import type { AgentCard } from "@a2a-js/sdk";
 
 // Define our agent card following A2A Protocol
 const chatAgentCard: AgentCard = {
@@ -74,5 +63,4 @@ const chatAgentCard: AgentCard = {
   supportsAuthenticatedExtendedCard: false,
 };
 
-// For now, just export the card to test the types
 export { chatAgentCard };

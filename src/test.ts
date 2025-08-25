@@ -9,14 +9,24 @@ import type {
   MessageSendParams,
   Message,
 } from "@a2a-js/sdk";
+import { 
+  DefaultRequestHandler, 
+  InMemoryTaskStore, 
+  JsonRpcTransportHandler 
+} from "@a2a-js/sdk/server";
 import { v4 as uuidv4 } from "uuid";
-import { A2AHandler } from "./a2a-handler.js";
+import { chatAgentCard } from "./agent-card.js";
+import { ChatAgentExecutor } from "./chat-agent-executor.js";
 
 async function testA2AHandler() {
-  console.log("🧪 Testing A2A Protocol Handler");
-  console.log("================================");
+  console.log("🧪 Testing A2A Protocol Handler with SDK");
+  console.log("=========================================");
 
-  const handler = new A2AHandler();
+  // Create SDK instances
+  const taskStore = new InMemoryTaskStore();
+  const agentExecutor = new ChatAgentExecutor();
+  const requestHandler = new DefaultRequestHandler(chatAgentCard, taskStore, agentExecutor);
+  const jsonRpcHandler = new JsonRpcTransportHandler(requestHandler);
 
   // Test 1: Simple message response
   console.log("\n1️⃣ Testing simple message response...");
@@ -29,14 +39,14 @@ async function testA2AHandler() {
 
   const simpleRequest: JSONRPCRequest = {
     jsonrpc: "2.0",
-    method: "sendMessage",
+    method: "message/send",
     params: {
       message: simpleMessage,
     } as unknown as { [k: string]: unknown },
     id: 1,
   };
 
-  const simpleResponse = await handler.handleRequest(simpleRequest);
+  const simpleResponse = await jsonRpcHandler.handle(simpleRequest);
   console.log("Request:", JSON.stringify(simpleRequest, null, 2));
   console.log("Response:", JSON.stringify(simpleResponse, null, 2));
 
@@ -51,14 +61,14 @@ async function testA2AHandler() {
 
   const taskRequest: JSONRPCRequest = {
     jsonrpc: "2.0",
-    method: "sendMessage",
+    method: "message/send",
     params: {
       message: taskMessage,
     } as unknown as { [k: string]: unknown },
     id: 2,
   };
 
-  const taskResponse = await handler.handleRequest(taskRequest);
+  const taskResponse = await jsonRpcHandler.handle(taskRequest);
   console.log("Request:", JSON.stringify(taskRequest, null, 2));
   console.log("Response:", JSON.stringify(taskResponse, null, 2));
 
@@ -73,30 +83,30 @@ async function testA2AHandler() {
 
   const artifactRequest: JSONRPCRequest = {
     jsonrpc: "2.0",
-    method: "sendMessage",
+    method: "message/send",
     params: {
       message: artifactMessage,
     } as unknown as { [k: string]: unknown },
     id: 3,
   };
 
-  const artifactResponse = await handler.handleRequest(artifactRequest);
+  const artifactResponse = await jsonRpcHandler.handle(artifactRequest);
   console.log("Request:", JSON.stringify(artifactRequest, null, 2));
   console.log("Response:", JSON.stringify(artifactResponse, null, 2));
 
   // Test 4: Get task status
-  if (taskResponse && 'result' in taskResponse && taskResponse.result && typeof taskResponse.result === 'object' && 'id' in taskResponse.result) {
+  if (taskResponse && typeof taskResponse === 'object' && 'result' in taskResponse && taskResponse.result && typeof taskResponse.result === 'object' && 'id' in taskResponse.result) {
     console.log("\n4️⃣ Testing get task status...");
     const getTaskRequest: JSONRPCRequest = {
       jsonrpc: "2.0",
-      method: "getTask",
+      method: "tasks/get",
       params: {
         id: (taskResponse.result as any).id,
       },
       id: 4,
     };
 
-    const getTaskResponse = await handler.handleRequest(getTaskRequest);
+    const getTaskResponse = await jsonRpcHandler.handle(getTaskRequest);
     console.log("Request:", JSON.stringify(getTaskRequest, null, 2));
     console.log("Response:", JSON.stringify(getTaskResponse, null, 2));
   }
